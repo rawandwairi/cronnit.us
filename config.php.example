@@ -1,0 +1,7 @@
+<?php return [
+  'client_id' => 'XXX',
+  'client_secret' => 'XXX',
+  'dbdsn' => 'mysql:dbname=XXXX', // you can also use sqlite:foo.db
+  'dbuser' => 'XXX',
+  'dbpass' => 'XXX'
+];
