@@ -1,0 +1,43 @@
+<p></p>
+
+<p>
+  <a class="btn btn-primary" href="/submit">
+    <i class="fa fa-pen"></i>
+    Add Post
+  </a>
+</p>
+
+<table class="table">
+<thead>
+  <tr>
+    <th>Title</th>
+    <th>Sub</th>
+    <th>When</th>
+  </tr>
+</thead>
+<tbody>
+{% for post in posts %}
+<tr>
+  <td>
+    {% if post.url is empty %}
+    <i class="far fa-xs fa-clock text-muted"></i>
+    <a href="/edit?id={{ post.id }}">{{ post.title }}</a>
+    {% else %}
+    <i class="fa fa-xs fa-check text-muted"></i>
+    <a href="{{ post.url }}" target="_blank">{{ post.title }}</a>
+    {% endif %}
+  </td>
+  <td>{{ post.subreddit }}</td>
+  <td>{{ post.when | time_diff }}</td>
+</tr>
+{% else %}
+<tr>
+  <td colspan="3">
+    <div class="text-center text-muted">
+      You have no posts
+    </div>
+  </td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
