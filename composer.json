@@ -1,0 +1,8 @@
+{
+    "require": {
+        "gabordemooij/redbean": "^5.1",
+        "rtheunissen/oauth2-reddit": "^2.0",
+        "twig/twig": "^2.5",
+        "twig/extensions": "^1.5"
+    }
+}
