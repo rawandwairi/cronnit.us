@@ -1,0 +1,43 @@
+<p></p>
+
+{% if error %}
+<div class="alert alert-danger">
+  <i class="fa fa-exclamation-triangle"></i>
+  {{ error }}
+</div>
+{% endif %}
+
+<form method="post">
+  <div class="form-group">
+    <label for="subreddit">Sub Reddit</label>
+    <input type="text" name="subreddit" class="form-control" id="subreddit" placeholder="/r/kde">
+  </div>
+  <div class="form-group">
+    <label for="title">Title</label>
+    <input type="text" name="title" class="form-control" id="title" placeholder="Something Really Cool!">
+  </div>
+  <div class="form-group">
+    <label for="body">Body</label>
+    <textarea rows="4" class="form-control" name="body" id="body" placeholder="Reddit Markdown or URL"></textarea>
+  </div>
+  <div class="form-group">
+    <label for="whendate">Date</label>
+    <input type="date" name="whendate" class="form-control" id="whendate">
+  </div>
+  <div class="form-group">
+    <label for="whentime">Time</label>
+    <input type="time" name="whentime" class="form-control" id="whentime">
+  </div>
+  <button type="submit" name="submit" class="btn btn-primary">
+    <i class="fa fa-clock"></i>
+    Schedule Post
+  </button>
+  <input id="whenzone" type="hidden" name="whenzone" value="UTC">
+</form>
+
+<script>
+$(function () {
+  var zone = /(GMT[\+\-]\d+)/.exec(new Date().toString())[1];
+  $('#whenzone').val(zone);
+});
+</script>
