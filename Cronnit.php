@@ -151,7 +151,7 @@ class Cronnit {
       }
     }
 
-    if (!preg_match('#^/r/[a-z_0-9]+$#', $data['subreddit'])) {
+    if (!preg_match('#^/r/[a-z_0-9]+$#i', $data['subreddit'])) {
       return "Subreddit must be something like /r/name";
     }
   }
