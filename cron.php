@@ -28,7 +28,8 @@ foreach ($pending as $post) {
   $data = [
     'title' => $post->title,
     'sr' => $post->subreddit,
-    'api_type' => 'json'
+    'api_type' => 'json',
+    'sendreplies' => true
   ];
 
   if (preg_match('#http[s]?://#i', $post->body)) {
