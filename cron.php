@@ -29,7 +29,8 @@ foreach ($pending as $post) {
     'title' => $post->title,
     'sr' => $post->subreddit,
     'api_type' => 'json',
-    'sendreplies' => true
+    'sendreplies' => true,
+    'resubmit' => true
   ];
 
   if (preg_match('#http[s]?://#i', $post->body)) {
