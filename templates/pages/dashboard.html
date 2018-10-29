@@ -1,5 +1,15 @@
 <p></p>
 
+{% if not account.stopNagging %}
+<div class="alert alert-info">
+  Please take a moment to
+  <a href="https://docs.google.com/forms/d/1GwDKdaKHEmuGtTxzawpc7FDniQ5tmQORoCau7SSHQv4/viewform?edit_requested=true" target="_blank">provide feedback</a>.
+  <a class="close" href="/stopnagging">
+    <span aria-hidden="true">&times;</span>
+  </a>
+</div>
+{% endif %}
+
 <p>
   <a class="btn btn-primary" href="/submit">
     <i class="fa fa-pen"></i>
