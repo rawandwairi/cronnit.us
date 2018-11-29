@@ -1,6 +1,3 @@
-php_value session.cookie_lifetime 604800
-php_value session.gc_maxlifetime 604800
-
 RewriteEngine On
 
 RewriteCond %{REQUEST_FILENAME} !-f
