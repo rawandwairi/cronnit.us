@@ -28,13 +28,14 @@
 {% for post in posts %}
 <tr>
   <td>
-    {% if post.url is empty %}
+    {% if post.error %}
+    <i class="fas fa-xs fa-exclamation-triangle text-danger"></i>
+    {% elseif post.url is empty %}
     <i class="far fa-xs fa-clock text-muted"></i>
-    <a href="/edit?id={{ post.id }}">{{ post.title }}</a>
     {% else %}
     <i class="fa fa-xs fa-check text-muted"></i>
-    <a href="{{ post.url }}" target="_blank">{{ post.title }}</a>
     {% endif %}
+    <a href="/edit?id={{ post.id }}">{{ post.title }}</a>
   </td>
   <td>{{ post.subreddit }}</td>
   <td>{{ post.when | time_diff }}</td>

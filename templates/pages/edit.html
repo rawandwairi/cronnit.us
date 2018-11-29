@@ -6,7 +6,27 @@
 </div>
 {% endif %}
 
+{% if post.error %}
+<div class="alert alert-danger">
+  <div class="d-flex">
+    <div class="d-flex mr-auto">
+      Reddit had a problem with this post:
+      {{ post.error }}
+    </div>
+    {#
+    <div class="d-flex justify-content-end">
+      <a class="btn btn-danger" href="#">
+        <i class="fa fa-redo"></i>
+        Retry
+      </a>
+    </div>
+    #}
+  </div>
+</div>
+{% endif %}
+
 <form method="post">
+  {% if post.url is empty %}
   <div class="form-group">
     <label for="subreddit">Sub Reddit</label>
     <input type="text" name="subreddit" class="form-control" id="subreddit" placeholder="/r/kde" value="{{ post.subreddit }}">
@@ -35,9 +55,48 @@
     <i class="fa fa-trash"></i>
     Delete
   </button>
+  {% else %}
+  <div class="alert alert-info">
+    <a class="btn btn-info float-right" href="{{ post.url }}" target="_blank">
+      <i class="fa fa-link"></i>
+      View Post
+    </a>
+    <div class="p-1">
+      Post already submitted to Reddit and cannot be changed, but you can still
+      add comments.
+    </div>
+  </div>
+  {% endif %}
 
   <input id="whenzone" type="hidden" name="whenzone" value="UTC">
 </form>
+
+
+<div class="m-1">
+  <a class="btn btn-primary" href="/comment?post={{ post.id }}">
+    <i class="fa fa-comment"></i>
+    Add Comment
+  </a>
+</div>
+
+{% if post.__get('ownCommentList') %}
+<table class="table table-bordered table-striped">
+<thead>
+  <tr>
+    <th>Comment</th>
+    <th>When</th>
+  </tr>
+</thead>
+<tbody>
+{% for comment in post.__get('ownCommentList') %}
+<tr>
+  <td>{{ comment.body }}</td>
+  <td>{{ comment.delay }}</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+{% endif %}
 
 <script>
 $(function () {

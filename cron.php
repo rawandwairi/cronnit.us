@@ -9,7 +9,7 @@ require_once __DIR__."/Cronnit.php";
 $cronnit = new Cronnit();
 $cronnit->connect();
 
-$pending = R::find('post', '((`url` = "") or (`url` is null)) and (`when` < ?)', [time()]);
+$pending = R::find('post', '((`url` = "") or (`url` is null)) and (`when` < ?) and (`error` is null)', [time()]);
 $reddit = $cronnit->getReddit();
 
 foreach ($pending as $post) {
@@ -33,7 +33,7 @@ foreach ($pending as $post) {
     'resubmit' => true
   ];
 
-  if (preg_match('#http[s]?://#i', $post->body)) {
+  if (preg_match('#^http[s]?://#i', $post->body)) {
     $data['kind'] = 'link';
     $data['url'] = trim($post->body);
   } else {
@@ -48,5 +48,28 @@ foreach ($pending as $post) {
   if (isset($response->json->data->url)) {
     $post->url = $response->json->data->url;
     R::store($post);
+  } else if ($response->json->errors) {
+    if (count($response->json->errors) == 1 && $response->json->errors[0][0] == 'RATELIMIT') {
+      var_dump($response->json);
+      continue;
+    }
+
+    $errors = [];
+
+    foreach ($response->json->errors as $error) {
+      if ($error[0] != 'RATELIMIT') {
+        $errors[] = $error[1];
+      }
+    }
+
+    if (empty($errors)) {
+      $post->error = "A strange error happened while posting";
+      $post->errorResponse = json_encode($response->json);
+    } else {
+      $post->error = implode(',', $errors);
+    }
+
+    R::store($post);
+    var_dump($response->json);
   }
 }

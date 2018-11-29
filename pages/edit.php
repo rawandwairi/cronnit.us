@@ -19,10 +19,6 @@ if (isset($_POST['delete'])) {
   $this->redirect("dashboard");
 }
 
-if (@strlen($post->url) > 0) {
-  $this->redirect("dashboard");
-}
-
 if (!isset($_POST['submit'])) {
   $post->whendate = $this->formatUserDate(intval($post->when), $post->whenzone ?: "UTC");
   $post->whentime = $this->formatUserTime(intval($post->when), $post->whenzone ?: "UTC");

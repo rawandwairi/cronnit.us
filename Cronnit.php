@@ -28,7 +28,7 @@ class Cronnit {
   }
 
   public function getAccount() {
-    $account = R::findOne('account', '`name`=?', [$_SESSION['login']]);
+    $account = $this->findAccount(@strval($_SESSION['login']));
 
     if (empty($account)) {
       $_SESSION['error'] = "You must be logged in";
@@ -36,6 +36,10 @@ class Cronnit {
     }
 
     return $account;
+  }
+
+  public function findAccount(string $name) {
+    return R::findOne('account', '`name`=?', [$name]);
   }
 
   public function getPost(int $id) {
@@ -109,7 +113,7 @@ class Cronnit {
       'clientId' => $this->config->client_id,
       'clientSecret' => $this->config->client_secret,
       'redirectUri' => "https://cronnit.us/authorize",
-      'userAgent' => 'linux:cronnit:1.0, (by /u/KayRice)',
+      'userAgent' => 'linux:cronnit:1.1, (by /u/KayRice)',
       'scopes' => ['identity', 'submit']
     ]);
   }
