@@ -1,0 +1,22 @@
+
+{% if error %}
+<div class="alert alert-danger">
+  {{ error }}
+</div>
+{% endif %}
+
+<form method="post">
+  <h2>Become a User</h2>
+  <p>
+    Enter a Reddit username below to login as that user.
+  </p>
+
+  <div class="form-group">
+    <label for="username">Username</label>
+    <input type="text" name="username" id="username" class="form-control" placeholder="Account name">
+  </div>
+  <button type="submit" class="btn btn-primary" name="becomeuser">
+    <i class="fa fa-user"></i>
+    Become User
+  </button>
+</form>
