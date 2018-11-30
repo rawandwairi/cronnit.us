@@ -9,7 +9,7 @@ require_once __DIR__."/Cronnit.php";
 $cronnit = new Cronnit();
 $cronnit->connect();
 
-$pending = R::find('post', '((`url` = "") or (`url` is null)) and (`when` < ?) and (`error` is null)', [time()]);
+$pending = R::find('post', '((`url` = "") or (`url` is null)) and (`when` < ?) and (`error` is null) order by `when` asc', [time()]);
 $reddit = $cronnit->getReddit();
 
 foreach ($pending as $post) {
