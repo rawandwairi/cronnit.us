@@ -21,7 +21,8 @@ $post->title = strval($_POST['title']);
 $post->body = strval($_POST['body']);
 $post->when = $this->convertTime($_POST['whendate'], $_POST['whentime'], $_POST['whenzone']);
 $post->whenzone = strval($_POST['whenzone']);
-$post->url = "";
+$post->url = null;
+$post->error = null;
 R::store($post);
 
 $this->redirect("dashboard");

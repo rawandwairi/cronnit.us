@@ -20,6 +20,8 @@ if (isset($_POST['submit'])) {
   $comment->post = $post;
   $comment->body = $body;
   $comment->delay = $delay;
+  $comment->url = null;
+  $comment->error = null;
   R::store($comment);
   $this->redirect("edit?id={$post->id}");
 }
