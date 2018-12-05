@@ -14,16 +14,7 @@ $reddit = $cronnit->getReddit();
 
 foreach ($pending as $post) {
   echo "posting {$post->id}\n";
-  $token = json_decode($post->account->token, true);
-  $accessToken = new AccessToken($token);
-
-  if ($accessToken->hasExpired()) {
-    $accessToken = $reddit->getAccessToken('refresh_token', ['refresh_token' => $accessToken->getRefreshToken()]);
-    $token['access_token'] = $accessToken->getToken();
-    $token['expires'] = $accessToken->getExpires();
-    $post->account->token = json_encode($token);
-    R::store($post->account);
-  }
+  $accessToken = $cronnit->getAccessToken($post->account);
 
   $data = [
     'title' => $post->title,
