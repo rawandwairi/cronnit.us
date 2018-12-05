@@ -90,7 +90,23 @@
 <tbody>
 {% for comment in post.__get('ownCommentList') %}
 <tr>
-  <td>{{ comment.body }}</td>
+  <td>
+    {% if comment.error %}
+    <i class="fas fa-xs fa-exclamation-triangle text-danger"></i>
+    {% elseif comment.url %}
+    <i class="fa fa-xs fa-check text-muted"></i>
+    {% else %}
+    <i class="far fa-xs fa-clock text-muted"></i>
+    {% endif %}
+
+    {% if comment.url %}
+    <a href="{{ comment.url }}" target="_blank" rel="noreferrer">
+    {{ comment.body | slice(0, 100) }}
+    </a>
+    {% else %}
+    {{ comment.body | slice(0, 100) }}
+    {% endif %}
+  </td>
   <td>{{ comment.delay }}</td>
 </tr>
 {% endfor %}
