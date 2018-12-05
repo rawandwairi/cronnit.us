@@ -2,6 +2,7 @@
 
 use \RedBeanPHP\R as R;
 use Rudolf\OAuth2\Client\Provider\Reddit;
+use \League\OAuth2\Client\Token\AccessToken;
 
 class Cronnit {
   private $config, $page, $reddit, $vars = [];
@@ -158,5 +159,20 @@ class Cronnit {
     if (!preg_match('#^/r/[a-z_0-9]+$#i', $data['subreddit'])) {
       return "Subreddit must be something like /r/name";
     }
+  }
+
+  public function getAccessToken($account) {
+    $token = json_decode($account->token, true);
+    $accessToken = new AccessToken($token);
+
+    if ($accessToken->hasExpired()) {
+      $accessToken = $this->getReddit()->getAccessToken('refresh_token', ['refresh_token' => $accessToken->getRefreshToken()]);
+      $token['access_token'] = $accessToken->getToken();
+      $token['expires'] = $accessToken->getExpires();
+      $account->token = json_encode($token);
+      R::store($account);
+    }
+
+    return $accessToken;
   }
 }
