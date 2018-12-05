@@ -96,6 +96,11 @@ foreach ($pendingComments as $comment) {
 
   if (isset($response->permalink)) {
     $comment->url = $response->permalink;
+
+    if ($comment->url[0] === '/') {
+      $comment->url = "https://www.reddit.com{$comment->url}";
+    }
+
     R::store($comment);
   } else {
     $comment->error = "Problem while posting comment";
