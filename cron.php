@@ -64,3 +64,42 @@ foreach ($pending as $post) {
     var_dump($response->json);
   }
 }
+
+$pendingComments = R::convertToBeans('comment', R::getAll("
+  select `comment`.*
+  from `comment`
+  join `post` on (`post`.`id` = `comment`.`post_id`)
+  where
+    (`comment`.`error` is null) and
+    (`comment`.`url` is null) and
+    ((`post`.`when` + `comment`.`delay`) < ?)
+", [time()]));
+
+foreach ($pendingComments as $comment) {
+  if (!preg_match('#comments/([^/]+)/#i', $comment->post->url, $match)) {
+    $comment->error = "Malformed link";
+    R::store($comment);
+    trigger_error("Cannot extract thing ID for post #{$comment->post->id}");
+    continue;
+  }
+
+  $thingID = "t3_{$match[1]}";
+  $accessToken = $cronnit->getAccessToken($comment->post->account);
+
+  $response = $cronnit->api($accessToken, 'POST', 'api/comment', [
+    'body' => http_build_query([
+      'thing_id' => $thingID,
+      'text' => $comment->body,
+      'return_rtjson' => true
+    ])
+  ]);
+
+  if (isset($response->permalink)) {
+    $comment->url = $response->permalink;
+    R::store($comment);
+  } else {
+    $comment->error = "Problem while posting comment";
+    R::store($comment);
+    var_dump(json_encode($response));
+  }
+}
