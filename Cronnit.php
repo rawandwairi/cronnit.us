@@ -133,6 +133,11 @@ class Cronnit {
   public function convertTime(string $date, string $time, string $zone) : int {
     $zone = new \DateTimeZone($zone);
     $date = \DateTime::createFromFormat('Y-m-d H:i', "$date $time", $zone);
+
+    if ($date === false) {
+      return 0;
+    }
+
     $date->setTimezone(new \DateTimeZone("UTC"));
     return $date->getTimestamp();
   }
