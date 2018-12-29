@@ -2,6 +2,7 @@
 
 use \RedBeanPHP\R as R;
 use \League\OAuth2\Client\Token\AccessToken;
+use \League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 
 require_once __DIR__."/vendor/autoload.php";
 require_once __DIR__."/Cronnit.php";
@@ -14,7 +15,14 @@ $reddit = $cronnit->getReddit();
 
 foreach ($pending as $post) {
   echo "posting {$post->id}\n";
-  $accessToken = $cronnit->getAccessToken($post->account);
+
+  try {
+    $accessToken = $cronnit->getAccessToken($post->account);
+  } catch (IdentityProviderException $e) {
+    $post->error = "Unable to get an access token - did you revoke access?";
+    R::store($post);
+    continue;
+  }
 
   $data = [
     'title' => $post->title,
