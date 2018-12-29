@@ -1,0 +1,77 @@
+
+<h3>Bulk Import</h3>
+<p>
+  Here you can upload a CSV file that contains many posts you want to
+  schedule. If you import a post that has the same
+  title twice with the same subreddit it will update the existing post
+  unless it was already posted or had an error making it safe to upload the
+  same CSV twice.
+</p>
+
+<h4>CSV Columns</h4>
+<p>
+  All the following columns must be provided and they are case-sensitive, however
+  their order doesn't matter.
+</p>
+<table class="table table-striped table-bordered">
+<thead>
+  <tr>
+    <th>Column</th>
+    <th>Description</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <th>title</th>
+    <td>Title of the post</td>
+  </tr>
+  <tr>
+    <th>body</th>
+    <td>Text of the post or a URL for links</td>
+  </tr>
+  <tr>
+    <th>subreddit</th>
+    <td>Which subreddit to post to</td>
+  </tr>
+  <tr>
+    <th>date</th>
+    <td>Date of when to schedule the post</td>
+  </tr>
+  <tr>
+    <th>time</th>
+    <td>Time of day when to schedule the post</td>
+  </tr>
+  <tr>
+    <th>timezone</th>
+    <td>
+      A timezone like <code>"PST"</code> or <code>"America/Los_Angeles"</code>
+      or numeric UTC offset like <code>"GMT-800"</code>
+    </td>
+  </tr>
+</tbody>
+</table>
+
+{% if error %}
+<div class="alert alert-danger">
+  {{ error }}
+</div>
+{% endif %}
+
+<form method="post" enctype="multipart/form-data">
+  <div class="form-group">
+    <label for="csv-file">CSV File</label>
+    <div class="form-control">
+      <input type="file" name="file" id="csv-file">
+    </div>
+  </div>
+
+  <div class="form-group form-check">
+    <input id="csv-check-only" class="form-check-input" type="checkbox" name="checkOnly" value="1">
+    <label class="form-check-label" for="csv-check-only">Check Only</label>
+  </div>
+
+  <button class="btn btn-primary" type="submit" name="submit" value="1">
+    <i class="fa fa-upload"></i>
+    Upload
+  </button>
+</form>
