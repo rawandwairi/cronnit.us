@@ -28,7 +28,8 @@ foreach ($pending as $post) {
     'title' => $post->title,
     'sr' => $post->subreddit,
     'api_type' => 'json',
-    'sendreplies' => true,
+    'sendreplies' => intval($post->sendreplies),
+    'nsfw' => intval($post->nsfw),
     'resubmit' => true
   ];
 

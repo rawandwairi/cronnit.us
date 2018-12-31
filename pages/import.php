@@ -42,6 +42,8 @@ if (isset($_POST['submit'])) {
     case "date":
     case "time":
     case "timezone":
+    case "sendreplies":
+    case "nsfw":
       break;
     default:
       $_SESSION['importerror'] = "Unknown column '$column'";
@@ -94,6 +96,9 @@ if (isset($_POST['submit'])) {
       $this->redirect('import');
     }
 
+    $post->sendreplies = isset($post->sendreplies) ? intval($post->sendreplies) : 1;
+    $post->nsfw = isset($post->nsfw) ? intval($post->nsfw) : 0;
+
     if ($checkOnly) {
       continue;
     }
@@ -111,6 +116,8 @@ if (isset($_POST['submit'])) {
     $bean->body = $post->body;
     $bean->when = $post->when;
     $bean->whenzone = $post->timezone;
+    $bean->sendreplies = intval($post->sendreplies);
+    $bean->nsfw = intval($post->nsfw);
     $bean->url = null;
     $bean->error = null;
     R::store($bean);

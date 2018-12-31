@@ -10,8 +10,8 @@
 
 <h4>CSV Columns</h4>
 <p>
-  All the following columns must be provided and they are case-sensitive, however
-  their order doesn't matter.
+  Columns names case-sensitive and must be provided unless they are noted as
+  optional. Their order in the CSV doesn't matter.
 </p>
 <table class="table table-striped table-bordered">
 <thead>
@@ -46,6 +46,23 @@
     <td>
       A timezone like <code>"PST"</code> or <code>"America/Los_Angeles"</code>
       or numeric UTC offset like <code>"GMT-800"</code>
+    </td>
+  </tr>
+  <tr>
+    <th>nsfw</th>
+    <td>
+      (Optional) Mark the post as Not Safe For Work (NSFW). Specify a value of
+      <code>1</code> to mark the post as nsfw, or a value of <code>0</code> for
+      a regular post.
+      (default: <code>0</code>)
+    </td>
+  </tr>
+  <tr>
+    <th>sendreplies</th>
+    <td>
+      (Optional) Have replies to the post go to your Reddit inbox. Specify a
+      value of <code>0</code> to disable or a value of <code>1</code> to enable.
+      (defualt: <code>1</code>)
     </td>
   </tr>
 </tbody>
