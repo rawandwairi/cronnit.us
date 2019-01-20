@@ -47,9 +47,15 @@ foreach ($pending as $post) {
     $data['text'] = $post->body;
   }
 
-  $response = $cronnit->api($accessToken, 'POST', 'api/submit', [
-    'body' => http_build_query($data)
-  ]);
+  try {
+    $response = $cronnit->api($accessToken, 'POST', 'api/submit', [
+      'body' => http_build_query($data)
+    ]);
+  } catch (\GuzzleHttp\Exception\ClientException $e) {
+    $post->error = "HTTP error: {$e->getMessage()}";
+    R::store($post);
+    continue;
+  }
 
   if (isset($response->json->data->url)) {
     $post->url = $response->json->data->url;
