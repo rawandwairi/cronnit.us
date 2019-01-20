@@ -5,6 +5,11 @@ use RedBeanPHP\R as R;
 $account = $this->getAccount();
 
 if (isset($_POST['submit'])) {
+  if ($account->banned) {
+    $_SESSION['importerror'] = $account->banned;
+    $this->redirect('import');
+  }
+  
   if (!isset($_FILES["file"]["tmp_name"])) {
     $_SESSION['importerror'] = "No file uploaded";
     $this->redirect('import');

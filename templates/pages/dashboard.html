@@ -1,4 +1,10 @@
 
+{% if account.banned %}
+<div class="alert alert-danger">
+  {{ account.banned }}
+</div>
+{% endif %}
+
 {% if not account.stopNagging %}
 <div class="alert alert-info">
   Please take a moment to

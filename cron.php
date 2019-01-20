@@ -16,6 +16,12 @@ $reddit = $cronnit->getReddit();
 foreach ($pending as $post) {
   echo "posting {$post->id}\n";
 
+  if ($post->account->banned) {
+    $post->error = $post->account->banned;
+    R::store($post);
+    continue;
+  }
+
   try {
     $accessToken = $cronnit->getAccessToken($post->account);
   } catch (IdentityProviderException $e) {
