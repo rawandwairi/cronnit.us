@@ -94,7 +94,11 @@ if (isset($_POST['submit'])) {
       $this->redirect('import');
     }
 
-    $post->when = $this->convertTime($post->date, $post->time, $post->timezone);
+    try {
+      $post->when = $this->convertTime($post->date, $post->time, $post->timezone);
+    } catch (Exception $e) {
+      $_SESSION['importerror'] = "Invalid timezone for row #$rowNumber";
+    }
 
     if ($post->when <= 0) {
       $_SESSION['importerror'] = "Cannot determine date/time for row #$rowNumber";

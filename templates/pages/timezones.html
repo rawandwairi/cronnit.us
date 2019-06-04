@@ -1,0 +1,22 @@
+<h3>Supported Timezones</h3>
+
+<table class="table table-bordered table-striped">
+<thead>
+<tr>
+  <th>ID</th>
+  <th>Offset</th>
+  <th>Current Date</th>
+  <th>Current Time</th>
+</tr>
+</thead>
+<tbody>
+{% for zone in zones %}
+<tr>
+  <td>{{ zone.id }}</td>
+  <td>{{ zone.offset }}</td>
+  <td>{{ zone.date }}</td>
+  <td>{{ zone.time }}</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
