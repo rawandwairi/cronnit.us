@@ -46,9 +46,12 @@
     <i class="fa fa-xs fa-check text-muted"></i>
     {% endif %}
     <a href="/edit?id={{ post.id }}">{{ post.title }}</a>
+    {% if post.ratelimit_count %}
+    <span class="badge badge-warning">ratelimit</span>
+    {% endif %}
   </td>
   <td>{{ post.subreddit }}</td>
-  <td>{{ post.when | time_diff }}</td>
+  <td>{{ (post.when_original ?? post.when) | time_diff }}</td>
 </tr>
 {% else %}
 <tr>

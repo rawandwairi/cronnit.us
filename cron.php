@@ -58,9 +58,18 @@ foreach ($pending as $post) {
   }
 
   if (isset($response->json->data->url)) {
+    $post->when_posted = time();
     $post->url = $response->json->data->url;
     R::store($post);
   } else if ($response->json->errors) {
+    if (isset($response->json->ratelimit)) {
+      $post->ratelimit_count += 1;
+      $post->ratelimit_sum += (int)ceil($response->json->ratelimit);
+      $post->when_original = $post->when_original ?: $post->when;
+      $post->when = time() + (int)ceil($response->json->ratelimit);
+      R::store($post);
+    }
+    
     if (count($response->json->errors) == 1 && $response->json->errors[0][0] == 'RATELIMIT') {
       var_dump($response->json);
       continue;

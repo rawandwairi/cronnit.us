@@ -25,6 +25,13 @@
 </div>
 {% endif %}
 
+{% if post.ratelimit_count %}
+<div class="alert alert-warning">
+  This post was rate limited by Reddit for {{ (post.ratelimit_sum / 60) | number_format }}
+  minutes
+</div>
+{% endif %}
+
 <form method="post">
   {% if post.url is empty %}
   <div class="form-group">
