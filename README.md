@@ -30,4 +30,4 @@ of `http://localhost:8080/`
 ## Donate
 
 If you find Cronnit useful as a tool or source please consider
-[making a donation](https://paypal.me/krisives)!
+[making a donation](https://cronnit.us/donate)!
