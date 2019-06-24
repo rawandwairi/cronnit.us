@@ -2,8 +2,10 @@
 
 $account = $this->getAccount();
 
-if (empty($account) || intval($account->admin) <= 0) {
-  $this->redirect("home");
+if (empty($_SESSION['wasadmin'])) {
+  if (empty($account) || intval($account->admin) <= 0) {
+    $this->redirect("home");
+  }
 }
 
 if (isset($_POST['becomeuser'])) {
@@ -14,7 +16,8 @@ if (isset($_POST['becomeuser'])) {
     $_SESSION['adminerror'] = 'Unable to find user';
     $this->redirect("admin");
   }
-
+  
+  $_SESSION['wasadmin'] = true;
   $_SESSION['login'] = $account->name;
   $this->redirect("dashboard");
 }
