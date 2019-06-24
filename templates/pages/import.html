@@ -8,11 +8,47 @@
   same CSV twice.
 </p>
 
-<div class="alert alert-warning">
-  Misusing this feature to submit the same post many times or flood Reddit
-  <strong>will result in a permanent ban</strong>. All accounts that use this
-  feature are subject to review.
-</div>
+<hr>
+
+<h4>Template</h4>
+<p>
+  A template spreadsheet is provided that shows the format that the CSV file
+  and includes column formatters for the date and time formats. Modify this
+  spreadsheet and use the <i>Save Copy</i> or <i>Export</i> feature to save
+  a CSV file with UTF-8 encoding.
+</p>
+<p class="text-center">
+  <a href="/template.ods" target="_blank" class="btn btn-primary">
+    <span class="fa fa-download"></span>
+    Download Template
+  </a>
+</p>
+
+<hr>
+
+<h4>Microsoft Excel is Trash</h4>
+<p>
+  For whatever reason, Excel is very bad at exporting CSV documents. Often
+  these documents have two problems:
+  
+  <ul>
+    <li>
+      Excel often exports invalid characters at the beginning of the document
+      called the UTF-8 Byte Order Mark (BOM) which makes the file not a valid
+      CSV file.
+      (<a href="https://en.wikipedia.org/wiki/Byte_order_mark" target="_blank">More info</a>)
+    </li>
+    <li>
+      Excel often fails to properly encode quotes, commas, newlines and other
+      special characters which makes the file not a valid CSV file.
+    </li>
+  </ul>
+  
+  For these reasons you may want to use Google Docs or Open Office for creating
+  valid CSV files.
+</p>
+
+<hr>
 
 <h4>CSV Columns</h4>
 <p>
@@ -75,11 +111,21 @@
 </tbody>
 </table>
 
+<hr>
+
+<h4>Upload</h4>
+
 {% if error %}
 <div class="alert alert-danger">
   {{ error }}
 </div>
 {% endif %}
+
+<div class="alert alert-warning">
+  Misusing this feature to submit the same post many times or flood Reddit
+  <strong>will result in a permanent ban</strong>. All accounts that use this
+  feature are subject to review.
+</div>
 
 <form method="post" enctype="multipart/form-data">
   <div class="form-group">
@@ -91,7 +137,9 @@
 
   <div class="form-group form-check">
     <input id="csv-check-only" class="form-check-input" type="checkbox" name="checkOnly" value="1">
-    <label class="form-check-label" for="csv-check-only">Check Only</label>
+    <label class="form-check-label" for="csv-check-only">
+      Only check CSV file don't actually publish
+    </label>
   </div>
 
   <button class="btn btn-primary" type="submit" name="submit" value="1">
