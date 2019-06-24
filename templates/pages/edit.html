@@ -55,6 +55,13 @@
     <input type="time" name="whentime" class="form-control" id="whentime" value="{{ post.whentime }}">
   </div>
   <div class="form-group">
+    <label for="whenzone">Timezone</label>
+    <input id="whenzone" type="text" class="form-control" name="whenzone" value="{{ post.whenzone }}">
+    <div class="form-text text-muted mx-2">
+      <small>See <a href="/timezones" target="_blank">this list</a> for supported timezones</small>
+    </div>
+  </div>
+  <div class="form-group">
     <div class="form-check form-check-inline">
       <input class="form-check-input" type="checkbox" id="sendreplies" name="sendreplies" value="1" {{ post.sendreplies ? "checked" : "" }}>
       <label class="form-check-label" for="sendreplies">Send Replies to Inbox</label>
@@ -84,8 +91,6 @@
     </div>
   </div>
   {% endif %}
-
-  <input id="whenzone" type="hidden" name="whenzone" value="UTC">
 </form>
 
 
