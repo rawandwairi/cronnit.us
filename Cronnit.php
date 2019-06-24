@@ -160,10 +160,6 @@ class Cronnit {
         return "Missing $key";
       }
     }
-
-    if (!preg_match('#^/r/[a-z_0-9]+$#i', $data['subreddit'])) {
-      return "Subreddit must be something like /r/name";
-    }
   }
 
   public function getAccessToken($account) {
