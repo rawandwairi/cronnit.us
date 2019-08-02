@@ -12,9 +12,10 @@ $cronnit->connect();
 
 $pending = R::find('post', '((`url` = "") or (`url` is null)) and (`when` < ?) and (`error` is null) order by `when` asc', [time()]);
 $reddit = $cronnit->getReddit();
+$account_sums = [];
 
 foreach ($pending as $post) {
-  echo "posting {$post->id}\n";
+  echo "posting {$post->id} for {$post->account->name}\n";
 
   if ($post->account->banned) {
     $post->error = $post->account->banned;
@@ -64,10 +65,11 @@ foreach ($pending as $post) {
   } else if ($response->json->errors) {
     if (isset($response->json->ratelimit)) {
       $post->ratelimit_count += 1;
-      $post->ratelimit_sum += (int)ceil($response->json->ratelimit);
+      $post->ratelimit_sum += (int)ceil($response->json->ratelimit) + @$account_sums[$post->account->id];
       $post->when_original = $post->when_original ?: $post->when;
       $post->when = time() + (int)ceil($response->json->ratelimit);
       R::store($post);
+      @$account_sums[$post->account->id] += (int)$response->json->ratelimit;
     }
     
     if (count($response->json->errors) == 1 && $response->json->errors[0][0] == 'RATELIMIT') {
