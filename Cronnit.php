@@ -154,11 +154,18 @@ class Cronnit {
     return $date->format("H:i");
   }
 
-  public function checkPost(array $data) {
+  public function checkPost($account, array $data) {
     foreach (['subreddit', 'title', 'body', 'whendate', 'whentime'] as $key) {
       if (!@is_string($data[$key]) || @strlen(trim($data[$key])) <= 0) {
         return "Missing $key";
       }
+    }
+
+    $limit = @$account->dailyLimit ?? 5;
+    $when = $this->convertTime($data['whendate'], $data['whentime'], $data['whenzone']);
+
+    if ($this->countDailyPosts($account, $when) >= $limit) {
+      return "You have exceeded your daily posting limit of $limit posts";
     }
   }
 
@@ -175,5 +182,15 @@ class Cronnit {
     }
 
     return $accessToken;
+  }
+
+  public function countDailyPosts($account, $when) {
+    return $account
+      ->withCondition('
+        from_unixtime(ifnull(when_original, `when`)) between
+          (from_unixtime(:when) - interval 12 hour) and
+          (from_unixtime(:when) + interval 12 hour)
+        ', [':when' => $when])
+      ->countOwn('post');
   }
 }

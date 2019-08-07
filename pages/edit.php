@@ -28,7 +28,7 @@ if (!isset($_POST['submit'])) {
   return;
 }
 
-if ($_SESSION['editerror'] = $this->checkPost($_POST)) {
+if (@$_SESSION['editerror'] = $this->checkPost($account, $_POST)) {
   $this->redirect("edit?id={$post->id}");
 }
 

@@ -9,7 +9,7 @@ if (isset($_POST['submit'])) {
     $_SESSION['importerror'] = $account->banned;
     $this->redirect('import');
   }
-  
+
   if (!isset($_FILES["file"]["tmp_name"])) {
     $_SESSION['importerror'] = "No file uploaded";
     $this->redirect('import');
@@ -108,6 +108,13 @@ if (isset($_POST['submit'])) {
     $post->sendreplies = isset($post->sendreplies) ? intval($post->sendreplies) : 1;
     $post->nsfw = isset($post->nsfw) ? intval($post->nsfw) : 0;
 
+    $limit = @$account->dailyLimit ?? 5;
+
+    if ($this->countDailyPosts($account, $post->when) >= $limit) {
+      $_SESSION['importerror'] = "Row #$rowNumber exceeds daily post limit of $limit";
+      $this->redirect('import');
+    }
+
     if ($checkOnly) {
       continue;
     }
@@ -129,6 +136,7 @@ if (isset($_POST['submit'])) {
     $bean->nsfw = intval($post->nsfw);
     $bean->url = null;
     $bean->error = null;
+    $bean->bulk = true;
     R::store($bean);
   }
 
