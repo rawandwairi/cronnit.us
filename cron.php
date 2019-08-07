@@ -23,6 +23,14 @@ foreach ($pending as $post) {
     continue;
   }
 
+  $limit = @$post->account->dailyLimit ?? 5;
+
+  if ($cronnit->countDailyPosts($post->account, $post->when) > $limit) {
+    $post->error = "Post exceeded daily limit of $limit";
+    R::store($post);
+    continue;
+  }
+
   try {
     $accessToken = $cronnit->getAccessToken($post->account);
   } catch (IdentityProviderException $e) {
@@ -71,7 +79,7 @@ foreach ($pending as $post) {
       R::store($post);
       @$account_sums[$post->account->id] += (int)$response->json->ratelimit;
     }
-    
+
     if (count($response->json->errors) == 1 && $response->json->errors[0][0] == 'RATELIMIT') {
       var_dump($response->json);
       continue;
