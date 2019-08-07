@@ -1,0 +1,44 @@
+
+<h3>Account Info</h3>
+
+<table class="table table-bordered">
+<tbody>
+  <tr>
+    <th>Reddit User</th>
+    <td>
+      <div>{{ account.name }}</div>
+      <div class="text-muted">
+        Username used to post on Reddit.
+      </div>
+    </td>
+  </tr>
+  <tr>
+    <th>Donor</th>
+    <td>
+      <div>{{ account.donator ? 'Yes' : 'No' }}</div>
+      <div class="text-muted">
+        Have you ever donated to Cronnit?
+      </div>
+    </td>
+  </tr>
+  <tr>
+    <th>Daily Post Limit</th>
+    <td>
+      <div>{{ account.dailyLimit | default(5) }}</div>
+      <div class="text-muted">
+        Number of posts you can schedule daily. Contact /u/KayRice on Reddit
+        if you want to increase this.
+      </div>
+    </td>
+  </tr>
+  <tr>
+    <th>Total Posts</th>
+    <td>
+      <div>{{ account.countOwn('post') | number_format }}</div>
+      <div class="text-muted">
+        How many posts you have scheduled using Cronnit.
+      </div>
+    </td>
+  </tr>
+</tbody>
+</table>
