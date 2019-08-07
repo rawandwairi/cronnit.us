@@ -10,7 +10,7 @@ require_once __DIR__."/Cronnit.php";
 $cronnit = new Cronnit();
 $cronnit->connect();
 
-$pending = R::find('post', '((`url` = "") or (`url` is null)) and (`when` < ?) and (`error` is null) order by `when` asc', [time()]);
+$pending = R::find('post', '(`url` is null) and (`error` is null) and (`when` < ?) order by `when` asc', [time()]);
 $reddit = $cronnit->getReddit();
 $account_sums = [];
 
