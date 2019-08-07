@@ -11,6 +11,18 @@ $cronnit = new Cronnit();
 $cronnit->connect();
 
 $pending = R::find('post', '(`url` is null) and (`error` is null) and (`when` < ?) order by `when` asc', [time()]);
+
+if (empty($pending)) {
+  echo "No posts ready looking for backlog\n";
+
+  $pending = R::find('post', '
+    (`url` is null) and
+    (`error` is null) and
+    (`when_original` < ?)
+    order by `when_original` asc
+    limit 5', [time()]);
+}
+
 $reddit = $cronnit->getReddit();
 $account_sums = [];
 

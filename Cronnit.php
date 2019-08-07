@@ -6,6 +6,7 @@ use \League\OAuth2\Client\Token\AccessToken;
 
 class Cronnit {
   private $config, $page, $reddit, $vars = [];
+  private $shards = null;
 
   public function __construct() {
     $this->config = (object)(include __DIR__."/config.php");
@@ -15,6 +16,22 @@ class Cronnit {
         throw new \Exception("Missing configuration '$key'");
       }
     }
+  }
+
+  public function getBestShard() {
+    if (!isset($this->shards)) {
+      $this->shards = R::find('shard');
+    }
+
+    $best = null;
+
+    foreach ($this->shards as $shard) {
+      if (($best === null || $shard->when < $best->when) && ($shard->address || $shard->proxy)) {
+        $best = $shard;
+      }
+    }
+
+    return $best;
   }
 
   public function isLoggedIn() : bool {
@@ -120,6 +137,30 @@ class Cronnit {
   }
 
   public function api($accessToken, string $mode, $endpoint, array $data = []) {
+    $shard = $this->getBestShard();
+    $options = [];
+
+    if ($shard) {
+      if ($shard->address) {
+        $options = array_merge_recursive($options, [
+          'curl' => [
+            CURLOPT_INTERFACE => $shard->address,
+          ],
+          'stream_context' => [
+            'socket' => [
+              'bindto' => $shard->address
+            ]
+          ]
+        ]);
+      } else if ($shard->proxy) {
+        $options = array_merge_recursive($options, [
+          'curl' => [
+            CURLOPT_PROXY => $shard->proxy,
+          ]
+        ]);
+      }
+    }
+
     $request = $this->getReddit()->getAuthenticatedRequest(
       $mode,
       "https://oauth.reddit.com/$endpoint",
@@ -127,7 +168,16 @@ class Cronnit {
       $data
     );
 
-    return json_decode((string)$this->getReddit()->getResponse($request)->getBody());
+    $response = $this->getReddit()->getHttpClient()->send($request, $options);
+    $response = json_decode((string)$response->getBody());
+
+    if ($shard && isset($response->json->ratelimit)) {
+      $shard->rate_limit = (float)$response->json->ratelimit;
+      $shard->when = time() + (int)$shard->rate_limit;
+      R::store($shard);
+    }
+
+    return $response;
   }
 
   public function convertTime(string $date, string $time, string $zone) : int {
