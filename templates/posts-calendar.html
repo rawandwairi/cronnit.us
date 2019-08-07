@@ -1,0 +1,149 @@
+{#
+  time can be any string acceptable by http://www.php.net/strtotime, the
+  template will output that time's month.
+
+  If you don't want to pass in a date you can set time like this:
+  {% set time = "now"|date("U") %}
+  {% set time = "December 2012"|date("U") %}
+
+  How ever you want to output items onto the calendar is a different issue,
+  but I'd assume pushing everything into an array numerically indexed by that day:
+  $days = array(1=>array('Something on the first'),31=>array('Halloween'));
+#}
+
+{% set data = data|default([]) %}
+{% set today = date("today") %}
+{% set time = date(time|default(today)) %}
+{% set numberOfMonth = numberOfMonth|default(3) %}
+{% set spanOtherMonth = spanOtherMonth|default(false) %}
+{% set firstDay = firstDay|default(1) %}
+{% set dateStringToday = time|date('Y-m-d') %}
+{% set disableNavigation = disableNavigation|default(false) %}
+{% set year = time.format('Y') %}
+{% set month = time.format('n') %}
+
+{% set daynames = daynames|default({
+  0: { short: 'Sun', full: 'Sunday'},
+  1: { short: 'Mon', full: 'Monday'},
+  2: { short: 'Tue', full: 'Tuesday'},
+  3: { short: 'Wed', full: 'Wednesday'},
+  4: { short: 'Thu', full: 'Thursday'},
+  5: { short: 'Fri', full: 'Friday'},
+  6: { short: 'Sat', full: 'Saturday'}
+}) %}
+
+{% set monthnames = monthnames|default({
+  1:  { short: 'january',   full: 'january'},
+  2:  { short: 'february',  full: 'february'},
+  3:  { short: 'march',     full: 'march'},
+  4:  { short: 'april',     full: 'april'},
+  5:  { short: 'may',       full: 'may'},
+  6:  { short: 'june',      full: 'june'},
+  7:  { short: 'july',      full: 'july'},
+  8:  { short: 'august',    full: 'august'},
+  9:  { short: 'september', full: 'september'},
+  10: { short: 'october',   full: 'october'},
+  11: { short: 'november',  full: 'november'},
+  12: { short: 'december',  full: 'december'}
+}) %}
+
+<style>
+.cal-day {
+  min-height: 4em;
+  position: relative;
+}
+
+.cal-day-number {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.cal-day a {
+  text-align: right;
+  display: block;
+  font-size: 80%;
+}
+</style>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th colspan="7" class="center cal-month-title">
+        {{ monthnames[month].full }}
+      </th>
+    </tr>
+    <tr>
+      {% for dow in range(0, 6) %}
+        {% set day = (dow + firstDay) % 7 %}
+        <th><span title="{{ daynames[day].full }}">{{ daynames[day].short }}</span></th>
+      {% endfor %}
+    </tr>
+  </thead>
+  <tbody>
+    {% set daysInMonth = time.format('t') %}
+    {% set startDow = (time.format('F 1\\s\\t Y')|date('w')) %}
+    {% set dow = startDow %}
+    {% set pos = (7 + (startDow - firstDay)) % 7 %}
+    <tr class="cal-week">
+      {% for dom in range(1,daysInMonth) -%}
+        {#
+          TODO
+           - disable days before today in calendar
+           -
+        #}
+        {% set dom_date_s = "%d-%02d-%02d"|format(year, month, dom) %}
+        {% set dom_date = date(dom_date_s) %}
+        {% set dom_id = "cal_" ~ ("%d%02d%02d"|format(year, month, dom)) %}
+
+        {% set cal_day_classes = (
+          'cal-day'
+          ~ (dom_date < today ? ' cal-unselectable' : '')
+          ~ ((pos + firstDay + 6) % 7 >= 5 ? ' cal-weekend' : '')
+          ~ (data[dom_date_s] is defined ? ' cal-day-data' : '')
+        ) %}
+
+        {% if loop.first and pos > 0 -%}
+          {% if not spanOtherMonth %}
+            {% for _dom in range(1, pos) -%}
+              <td class="cal-day"><span>&nbsp;</span></td>
+            {%- endfor %}
+          {% else %}
+            <td colspan="{{ pos }}"><span>&nbsp;</span></td>
+          {% endif %}
+        {%- endif %}
+
+        <td>
+          <div class="cal-day">
+            <span class="text-muted cal-day-number">{{ dom }}</span>
+            {% for post in posts[year][month][dom] %}
+              <a href="#">
+                {{ post.title }}
+              </a>
+            {% endfor %}
+          </div>
+        </td>
+
+        {% if loop.last and pos != 6 -%}
+          {% if not spanOtherMonth %}
+            {% for _dom in range(1, 6 - pos) -%}
+              <td class="cal-day"><span>&nbsp;</span></td>
+            {%- endfor %}
+          {% else %}
+            <td colspan="{{ 6 - pos }}"><span>&nbsp;</span></td>
+          {% endif %}
+        {%- endif %}
+
+        {% if pos == 6 and not loop.last %}
+          {% set pos = 0 %}
+          {% set dow = firstDay %}
+    </tr>
+    <tr class="cal-week">
+        {% else %}
+          {% set dow = (dow + 1) % 7 %}
+          {% set pos = pos + 1 %}
+        {% endif %}
+      {%- endfor %}
+    </tr>
+  </tbody>
+</table>
