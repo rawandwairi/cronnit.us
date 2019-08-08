@@ -3,5 +3,6 @@
   'client_secret' => 'XXX',
   'dbdsn' => 'mysql:dbname=XXXX', // you can also use sqlite:foo.db
   'dbuser' => 'XXX',
-  'dbpass' => 'XXX'
+  'dbpass' => 'XXX',
+  'url' => 'https://cronnit.us'
 ];

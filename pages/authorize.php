@@ -27,7 +27,7 @@ if ($_SESSION['reddit_oauth_state'] !== $_GET['state']) {
 $accessToken = (object)$this->getReddit()->getAccessToken('authorization_code', [
   'code' => $_GET['code'],
   'state' => $_GET['state'],
-  'redirect_uri' => 'https://cronnit.us/authorize'
+  'redirect_uri' => "{$this->getBaseUrl()}/authorize"
 ]);
 
 $response = $this->api($accessToken, 'GET', 'api/v1/me');
