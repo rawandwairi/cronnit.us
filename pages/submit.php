@@ -10,7 +10,7 @@ if (!isset($_POST['submit'])) {
   return;
 }
 
-if ($_SESSION['submiterror'] = $this->checkPost($account, $_POST)) {
+if (@$_SESSION['submiterror'] = $this->checkPost($account, $_POST)) {
   $this->redirect("submit");
 }
 
