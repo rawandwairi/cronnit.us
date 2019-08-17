@@ -239,6 +239,12 @@ class Cronnit {
   }
 
   public function countDailyPosts($account, $when) {
+    $columns = R::inspect('post');
+
+    if (empty($columns['when'])) {
+      return 0;
+    }
+
     return $account
       ->withCondition('
         from_unixtime(ifnull(when_original, `when`)) between
